@@ -1,0 +1,62 @@
+<section class="TodoSection">
+  <h1>Todo List</h1>
+  <div class="containerPost">
+    <input [(ngModel)]="Task" (keyup.enter)="postTask()" placeholder="Nueva tarea..." class="task-input">
+    <button (click)="postTask()" class="add-btn">Agregar</button>
+  </div>
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th>Completado</th>
+        <th>Tarea</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let task of TaskList">
+        <tr *ngIf="!task.completed">
+          <td>
+            <input type="checkbox" (click)="updateCompleted($event,task.id)" [(ngModel)]="task.completed" class="checkbox">
+          </td>
+          <td>
+            <div *ngIf="taskEditing; else editTask" [ngClass]="{completed: task.completed}">{{ task.nombre }}
+            </div>
+            <ng-template #editTask>
+              <input type="text" [(ngModel)] = "task.nombre" (keyup.enter)="putTask(task, task.id)" (keyup.esc)="toggleEditTask()" autofocus>
+            </ng-template>
+          </td>
+          <td>
+            <div *ngIf="taskEditing; else doneBtn">
+              <button (click)="toggleEditTask()" class="update-btn"><i class="fa fa-edit"></i> Editar</button>
+            </div>
+            <ng-template #doneBtn>
+              <button class="update-btn"><i class="fa fa-edit" (click)="putTask(task, task.id)"></i> Listo</button>
+            </ng-template>
+          </tr>
+        </ng-container>
+        <hr>
+        <ng-container *ngFor="let task of TaskList">
+          <tr *ngIf="task.completed">
+            <td>
+              <input type="checkbox" (click)="updateCompleted($event,task.id)" [(ngModel)]="task.completed" class="checkbox">
+            </td>
+            <td>
+              <div *ngIf="taskEditing; else editTask" [ngClass]="{completed: task.completed}">{{ task.nombre }}
+              </div>
+              <ng-template #editTask>
+                <input type="text" [(ngModel)] = "task.nombre" (keyup.enter)="putTask(task, task.id)" (keyup.esc)="toggleEditTask()" autofocus>
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="taskEditing; else doneBtn">
+                <!-- <button (click)="toggleEditTask()" class="update-btn"><i class="fa fa-edit"> Editar</i></button> -->
+                <button class="delete-btn" (click)="deleteTask(task.id)"><i class="fa fa-trash"></i> Eliminar</button>
+              </div>
+              <ng-template #doneBtn>
+                <button class="update-btn"><i class="fa fa-edit" (click)="putTask(task, task.id)"></i> Listo</button>
+              </ng-template>
+            </td>
+          </ng-container>
+    </tbody>
+  </table>
+</section>
